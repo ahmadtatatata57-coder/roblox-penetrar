@@ -1,0 +1,340 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Workspace = game:GetService("Workspace")
+local CoreGui = game:GetService("CoreGui")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+if CoreGui:FindFirstChild("XenoPremiumV7") then 
+    CoreGui.XenoPremiumV7:Destroy() 
+end
+
+_G.XBActive = true
+Settings = {ESP = false, Respawn = false, Hitbox = false}
+targetPlayerName = ""
+
+local SG = Instance.new("ScreenGui")
+SG.Name = "XenoPremiumV7"
+SG.ResetOnSpawn = false
+SG.Parent = CoreGui
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 250, 0, 410)
+MainFrame.Position = UDim2.new(0.02, 0, 0.25, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 25, 45)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = SG
+
+local MS = Instance.new("UIStroke")
+MS.Thickness = 1.5
+MS.Color = Color3.fromRGB(30, 80, 160)
+MS.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+MS.Parent = MainFrame
+
+local MC = Instance.new("UICorner")
+MC.CornerRadius = UDim.new(0, 10)
+MC.Parent = MainFrame
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 38)
+Title.Text = "  XENO V7 | GAKURAN"
+Title.TextColor3 = Color3.fromRGB(240, 245, 255)
+Title.TextSize = 13
+Title.Font = Enum.Font.RobotoMono
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.BackgroundColor3 = Color3.fromRGB(25, 50, 95)
+Title.BorderSizePixel = 0
+Title.Parent = MainFrame
+
+local TC = Instance.new("UICorner")
+TC.CornerRadius = UDim.new(0, 10)
+TC.Parent = Title
+
+local HideText = Instance.new("TextLabel")
+HideText.Size = UDim2.new(0, 100, 1, 0)
+HideText.Position = UDim2.new(1, -110, 0, 0)
+HideText.Text = "[ RightShift ]"
+HideText.TextColor3 = Color3.fromRGB(150, 180, 230)
+HideText.TextSize = 11
+HideText.Font = Enum.Font.SourceSans
+HideText.TextXAlignment = Enum.TextXAlignment.Right
+HideText.BackgroundTransparency = 1
+HideText.Parent = Title
+
+
+local B1 = Instance.new("TextButton")
+B1.Size = UDim2.new(0, 220, 0, 35)
+B1.Position = UDim2.new(0, 15, 0, 50)
+B1.Text = "ESP + Stats Radar: OFF"
+B1.TextColor3 = Color3.fromRGB(255, 255, 255)
+B1.BackgroundColor3 = Color3.fromRGB(205, 45, 45)
+B1.Font = Enum.Font.SourceSansBold
+B1.TextSize = 14
+B1.Parent = MainFrame
+
+local BC1 = Instance.new("UICorner")
+BC1.CornerRadius = UDim.new(0, 6)
+BC1.Parent = B1
+
+local B2 = Instance.new("TextButton")
+B2.Size = UDim2.new(0, 220, 0, 35)
+B2.Position = UDim2.new(0, 15, 0, 95)
+B2.Text = "Same Server Rejoin: OFF"
+B2.TextColor3 = Color3.fromRGB(255, 255, 255)
+B2.BackgroundColor3 = Color3.fromRGB(205, 45, 45)
+B2.Font = Enum.Font.SourceSansBold
+B2.TextSize = 14
+B2.Parent = MainFrame
+
+local BC2 = Instance.new("UICorner")
+BC2.CornerRadius = UDim.new(0, 6)
+BC2.Parent = B2
+
+local B4 = Instance.new("TextButton")
+B4.Size = UDim2.new(0, 220, 0, 35)
+B4.Position = UDim2.new(0, 15, 0, 140)
+B4.Text = "M1 Damage Assist: OFF"
+B4.TextColor3 = Color3.fromRGB(255, 255, 255)
+B4.BackgroundColor3 = Color3.fromRGB(205, 45, 45)
+B4.Font = Enum.Font.SourceSansBold
+B4.TextSize = 14
+B4.Parent = MainFrame
+
+local BC4 = Instance.new("UICorner")
+BC4.CornerRadius = UDim.new(0, 6)
+BC4.Parent = B4
+
+local DropContainer = Instance.new("ScrollingFrame")
+DropContainer.Size = UDim2.new(0, 220, 0, 80)
+DropContainer.Position = UDim2.new(0, 15, 0, 185)
+DropContainer.BackgroundColor3 = Color3.fromRGB(25, 35, 60)
+DropContainer.BorderSizePixel = 0
+DropContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+DropContainer.ScrollBarThickness = 4
+DropContainer.Parent = MainFrame
+
+local DropListLayout = Instance.new("UIListLayout")
+DropListLayout.Padding = UDim.new(0, 4)
+DropListLayout.Parent = DropContainer
+
+local DropCorner = Instance.new("UICorner")
+DropCorner.CornerRadius = UDim.new(0, 6)
+DropCorner.Parent = DropContainer
+
+local B5 = Instance.new("TextButton")
+B5.Size = UDim2.new(0, 220, 0, 35)
+B5.Position = UDim2.new(0, 15, 0, 275)
+B5.Text = "⚡ Teleport Behind Target"
+B5.TextColor3 = Color3.fromRGB(255, 255, 255)
+B5.BackgroundColor3 = Color3.fromRGB(25, 100, 210)
+B5.Font = Enum.Font.SourceSansBold
+B5.TextSize = 14
+B5.Parent = MainFrame
+
+local BC5 = Instance.new("UICorner")
+BC5.CornerRadius = UDim.new(0, 6)
+BC5.Parent = B5
+
+local B3 = Instance.new("TextButton")
+B3.Size = UDim2.new(0, 220, 0, 35)
+B3.Position = UDim2.new(0, 15, 0, 360)
+B3.Text = "⛔ Unload Script"
+B3.TextColor3 = Color3.fromRGB(255, 255, 255)
+B3.BackgroundColor3 = Color3.fromRGB(45, 50, 60)
+B3.Font = Enum.Font.SourceSansBold
+B3.TextSize = 14
+B3.Parent = MainFrame
+
+local BC3 = Instance.new("UICorner")
+BC3.CornerRadius = UDim.new(0, 6)
+BC3.Parent = B3
+
+local function clear()
+    for _, v in pairs(Workspace:GetChildren()) do
+        if v:FindFirstChild("XESP") then v.XESP:Destroy() end
+    end
+    for _, v in pairs(Players:GetPlayers()) do
+        if v.Character and v.Character:FindFirstChild("XESP") then v.Character.XESP:Destroy() end
+    end
+end
+
+local function updateDropdown()
+    for _, child in pairs(DropContainer:GetChildren()) do
+        if child:IsA("TextButton") then child:Destroy() end
+    end
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer then
+            local btn = Instance.new("TextButton")
+            btn.Size = UDim2.new(1, -6, 0, 22)
+            btn.Text = " " .. p.DisplayName .. " (@" .. p.Name .. ")"
+            btn.TextColor3 = Color3.fromRGB(200, 220, 255)
+            btn.BackgroundColor3 = Color3.fromRGB(35, 50, 85)
+            btn.Font = Enum.Font.SourceSans
+            btn.TextSize = 13
+            btn.TextXAlignment = Enum.TextXAlignment.Left
+            
+            local btnCorner = Instance.new("UICorner")
+            btnCorner.CornerRadius = UDim.new(0, 4)
+            btnCorner.Parent = btn
+            
+            if targetPlayerName == p.Name then
+                btn.BackgroundColor3 = Color3.fromRGB(45, 125, 230)
+                btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            end
+            
+            btn.MouseButton1Click:Connect(function()
+                targetPlayerName = p.Name
+                updateDropdown()
+            end)
+            btn.Parent = DropContainer
+        end
+    end
+    DropContainer.CanvasSize = UDim2.new(0, 0, 0, DropListLayout.AbsoluteContentSize.Y)
+end
+
+B1.MouseButton1Click:Connect(function()
+    if not _G.XBActive then return end
+    Settings.ESP = not Settings.ESP
+    B1.Text = Settings.ESP and "ESP + Stats Radar: ON" or "ESP + Stats Radar: OFF"
+    B1.BackgroundColor3 = Settings.ESP and Color3.fromRGB(45, 185, 45) or Color3.fromRGB(205, 45, 45)
+    if not Settings.ESP then clear() end
+end)
+
+local function rejoinSama()
+    pcall(function()
+        local ts = game:GetService("TeleportService")
+        if #Players:GetPlayers() <= 1 then
+            ts:Teleport(game.PlaceId, LocalPlayer)
+        else
+            ts:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+        end
+    end)
+end
+
+B2.MouseButton1Click:Connect(function()
+    if not _G.XBActive then return end
+    Settings.Respawn = not Settings.Respawn
+    B2.Text = Settings.Respawn and "Same Server Rejoin: ON" or "Same Server Rejoin: OFF"
+    B2.BackgroundColor3 = Settings.Respawn and Color3.fromRGB(45, 185, 45) or Color3.fromRGB(205, 45, 45)
+    if Settings.Respawn then rejoinSama() end
+end)
+
+B4.MouseButton1Click:Connect(function()
+    if not _G.XBActive then return end
+    Settings.Hitbox = not Settings.Hitbox
+    B4.Text = Settings.Hitbox and "M1 Damage Assist: ON" or "M1 Damage Assist: OFF"
+    B4.BackgroundColor3 = Settings.Hitbox and Color3.fromRGB(45, 185, 45) or Color3.fromRGB(205, 45, 45)
+end)
+
+B5.MouseButton1Click:Connect(function()
+    if not _G.XBActive or not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
+    if targetPlayerName ~= "" then
+        local tPlr = Players:FindFirstChild(targetPlayerName)
+        if tPlr and tPlr.Character and tPlr.Character:FindFirstChild("HumanoidRootPart") then
+            LocalPlayer.Character.HumanoidRootPart.CFrame = tPlr.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+        end
+    end
+end)
+
+UserInputService.InputBegan:Connect(function(i, g)
+    if not g and i.KeyCode == Enum.KeyCode.RightShift then
+        MainFrame.Visible = not MainFrame.Visible
+    end
+end)
+
+local function esp(ch, npc)
+    if not ch:FindFirstChild("HumanoidRootPart") or ch:FindFirstChild("XESP") then return end
+    local f = Instance.new("Folder")
+    f.Name = "XESP"
+    f.Parent = ch
+    local h = Instance.new("Highlight")
+    h.Adornee = ch
+    h.FillTransparency = 0.65
+    h.OutlineTransparency = 0
+    h.FillColor = npc and Color3.fromRGB(255, 60, 60) or Color3.fromRGB(60, 160, 255)
+    h.OutlineColor = npc and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(0, 100, 255)
+    h.Parent = f
+    local b = Instance.new("BillboardGui")
+    b.AlwaysOnTop = true
+    b.Size = UDim2.new(0, 200, 0, 70)
+    b.MaxDistance = 500
+    b.Adornee = ch:FindFirstChild("Head") or ch.HumanoidRootPart
+    local l = Instance.new("TextLabel")
+    l.Size = UDim2.new(1, 0, 1, 0)
+    l.BackgroundTransparency = 1
+    l.TextSize = 12
+    l.Font = Enum.Font.RobotoMono
+    l.TextColor3 = npc and Color3.fromRGB(255, 140, 140) or Color3.fromRGB(255, 255, 255)
+    l.TextStrokeTransparency = 0
+    local hum = ch:FindFirstChildOfClass("Humanoid")
+    local hp = hum and math.floor(hum.Health) or 0
+    local max = hum and math.floor(hum.MaxHealth) or 100
+    local st = ch:FindFirstChild("Posture") or ch:FindFirstChild("Stamina") or ch:FindFirstChild("PostureValue")
+    local stV = "100"
+    if st and (st:IsA("NumberValue") or st:IsA("IntValue")) then
+        stV = math.floor(st.Value)
+    else
+        local att = ch:GetAttribute("Posture") or ch:GetAttribute("Stamina")
+        if att then stV = math.floor(att)
+        else if hum then stV = math.floor(hum.MoveDirection.Magnitude * 100) if stV == 0 then stV = "100 (Idle)" end end end
+    end
+    local prf = npc and "[NPC] " or ""
+    l.Text = prf .. ch.Name .. "\n[ HP: " .. hp .. " / " .. max .. " ]\n[ Posture/STM: " .. stV .. " ]"
+    l.Parent = b
+    b.Parent = f
+end
+
+RunService.RenderStepped:Connect(function()
+    if _G.XBActive and Settings.Hitbox and targetPlayerName ~= "" then
+        local tPlr = Players:FindFirstChild(targetPlayerName)
+        if tPlr and tPlr.Character and tPlr.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local myHRP = LocalPlayer.Character.HumanoidRootPart
+            local tHRP = tPlr.Character.HumanoidRootPart
+            local distance = (myHRP.Position - tHRP.Position).Magnitude
+            if distance <= 18 then
+                if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+                    tHRP.CFrame = myHRP.CFrame * CFrame.new(0, 0, -2.5)
+                end
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while task.wait(0.5) do
+        if not _G.XBActive then break end
+        updateDropdown()
+        if Settings.ESP and LocalPlayer.Character then
+            for _, v in pairs(Players:GetPlayers()) do
+                if v ~= LocalPlayer and v.Character then esp(v.Character, false) end
+            end
+            for _, v in pairs(Workspace:GetChildren()) do
+                if v:IsA("Model") and v ~= LocalPlayer.Character and v:FindFirstChildOfClass("Humanoid") then esp(v, true) end
+            end
+        end
+    end
+end)
+
+local function watch(ch)
+    local hum = ch:WaitForChild("Humanoid", 10)
+    if hum then
+        hum.Died:Connect(function()
+            if _G.XBActive and Settings.Respawn then
+                task.wait(0.1)
+                rejoinSama()
+            end
+        end)
+    end
+end
+
+LocalPlayer.CharacterAdded:Connect(watch)
+if LocalPlayer.Character then watch(LocalPlayer.Character) end
+
+B3.MouseButton1Click:Connect(function()
+    _G.XBActive = false
+    clear()
+    if SG then SG:Destroy() end
+end)
