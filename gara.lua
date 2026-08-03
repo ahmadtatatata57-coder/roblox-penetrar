@@ -64,7 +64,6 @@ HideText.TextXAlignment = Enum.TextXAlignment.Right
 HideText.BackgroundTransparency = 1
 HideText.Parent = Title
 
-
 local B1 = Instance.new("TextButton")
 B1.Size = UDim2.new(0, 220, 0, 35)
 B1.Position = UDim2.new(0, 15, 0, 50)
@@ -107,7 +106,7 @@ local BC4 = Instance.new("UICorner")
 BC4.CornerRadius = UDim.new(0, 6)
 BC4.Parent = B4
 
-local DropContainer = Instance.new("ScrollingFrame")
+DropContainer = Instance.new("ScrollingFrame")
 DropContainer.Size = UDim2.new(0, 220, 0, 80)
 DropContainer.Position = UDim2.new(0, 15, 0, 185)
 DropContainer.BackgroundColor3 = Color3.fromRGB(25, 35, 60)
@@ -116,7 +115,7 @@ DropContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
 DropContainer.ScrollBarThickness = 4
 DropContainer.Parent = MainFrame
 
-local DropListLayout = Instance.new("UIListLayout")
+DropListLayout = Instance.new("UIListLayout")
 DropListLayout.Padding = UDim.new(0, 4)
 DropListLayout.Parent = DropContainer
 
@@ -159,6 +158,134 @@ local function clear()
     for _, v in pairs(Players:GetPlayers()) do
         if v.Character and v.Character:FindFirstChild("XESP") then v.Character.XESP:Destroy() end
     end
+end
+
+local function buatHUD()
+    if CoreGui:FindFirstChild("XenoHUD") then return end
+    local hudSG = Instance.new("ScreenGui")
+    hudSG.Name = "XenoHUD"
+    hudSG.ResetOnSpawn = false
+    hudSG.Parent = CoreGui
+
+    local hudFrame = Instance.new("Frame")
+    hudFrame.Name = "HUDFrame"
+    hudFrame.Size = UDim2.new(0, 220, 0, 85)
+    hudFrame.Position = UDim2.new(1, -235, 1, -100)
+    hudFrame.BackgroundColor3 = Color3.fromRGB(15, 25, 45)
+    hudFrame.BorderSizePixel = 0
+    hudFrame.Parent = hudSG
+
+    local hudCorner = Instance.new("UICorner")
+    hudCorner.CornerRadius = UDim.new(0, 8)
+    hudCorner.Parent = hudFrame
+
+    local hudStroke = Instance.new("UIStroke")
+    hudStroke.Thickness = 1.5
+    hudStroke.Color = Color3.fromRGB(30, 80, 160)
+    hudStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    hudStroke.Parent = hudFrame
+
+    local hudTitle = Instance.new("TextLabel")
+    hudTitle.Name = "TargetName"
+    hudTitle.Size = UDim2.new(1, -20, 0, 25)
+    hudTitle.Position = UDim2.new(0, 10, 0, 5)
+    hudTitle.Text = "TARGET: NONE"
+    hudTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    hudTitle.TextSize = 11
+    hudTitle.Font = Enum.Font.RobotoMono
+    hudTitle.TextXAlignment = Enum.TextXAlignment.Left
+    hudTitle.BackgroundTransparency = 1
+    hudTitle.Parent = hudFrame
+
+    local hpBack = Instance.new("Frame")
+    hpBack.Name = "HPBack"
+    hpBack.Size = UDim2.new(1, -20, 0, 15)
+    hpBack.Position = UDim2.new(0, 10, 0, 35)
+    hpBack.BackgroundColor3 = Color3.fromRGB(30, 35, 45)
+    hpBack.BorderSizePixel = 0
+    hpBack.Parent = hudFrame
+
+    local hpBar = Instance.new("Frame")
+    hpBar.Name = "HPBar"
+    hpBar.Size = UDim2.new(0, 0, 1, 0)
+    hpBar.BackgroundColor3 = Color3.fromRGB(45, 185, 45)
+    hpBar.BorderSizePixel = 0
+    hpBar.Parent = hpBack
+
+    local hpText = Instance.new("TextLabel")
+    hpText.Name = "HPText"
+    hpText.Size = UDim2.new(1, 0, 1, 0)
+    hpText.Text = "HP: 0/0"
+    hpText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    hpText.TextSize = 10
+    hpText.Font = Enum.Font.SourceSansBold
+    hpText.BackgroundTransparency = 1
+    hpText.Parent = hpBack
+
+    local stBack = Instance.new("Frame")
+    stBack.Name = "STBack"
+    stBack.Size = UDim2.new(1, -20, 0, 15)
+    stBack.Position = UDim2.new(0, 10, 0, 55)
+    stBack.BackgroundColor3 = Color3.fromRGB(30, 35, 45)
+    stBack.BorderSizePixel = 0
+    stBack.Parent = hudFrame
+
+    local stBar = Instance.new("Frame")
+    stBar.Name = "STBar"
+    stBar.Size = UDim2.new(0, 0, 1, 0)
+    stBar.BackgroundColor3 = Color3.fromRGB(230, 160, 35)
+    stBar.BorderSizePixel = 0
+    stBar.Parent = stBack
+
+    local stText = Instance.new("TextLabel")
+    stText.Name = "STText"
+    stText.Size = UDim2.new(1, 0, 1, 0)
+    stText.Text = "POSTURE: 0"
+    stText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    stText.TextSize = 10
+    stText.Font = Enum.Font.SourceSansBold
+    stText.BackgroundTransparency = 1
+    stText.Parent = stBack
+end
+
+local function updateHUD()
+    if not CoreGui:FindFirstChild("XenoHUD") then return end
+    local f = CoreGui.XenoHUD:FindFirstChild("HUDFrame")
+    if not f then return end
+
+    if targetPlayerName ~= "" then
+        local tPlr = Players:FindFirstChild(targetPlayerName)
+        if tPlr and tPlr.Character and tPlr.Character:FindFirstChildOfClass("Humanoid") then
+            local hum = tPlr.Character:FindFirstChildOfClass("Humanoid")
+            local currentHP = math.clamp(hum.Health, 0, hum.MaxHealth)
+            local maxHP = hum.MaxHealth
+            local pctHP = maxHP > 0 and (currentHP / maxHP) or 0
+
+            local postureValue = tPlr.Character:FindFirstChild("Posture") or tPlr.Character:FindFirstChild("Stamina") or tPlr.Character:FindFirstChild("PostureValue")
+            local currentStamina = 100
+            if postureValue and (postureValue:IsA("NumberValue") or postureValue:IsA("IntValue")) then
+                currentStamina = math.clamp(postureValue.Value, 0, 100)
+            else
+                local att = tPlr.Character:GetAttribute("Posture") or tPlr.Character:GetAttribute("Stamina")
+                if att then currentStamina = math.clamp(att, 0, 100) end
+            end
+            local pctST = currentStamina / 100
+
+            f.TargetName.Text = "TARGET: " .. string.upper(tPlr.DisplayName)
+            f.TargetName.TextColor3 = Color3.fromRGB(255, 255, 255)
+            f.HPBack.HPBar.Size = UDim2.new(pctHP, 0, 1, 0)
+            f.HPBack.HPText.Text = "HP: " .. math.floor(currentHP) .. " / " .. math.floor(maxHP)
+            f.STBack.STBar.Size = UDim2.new(pctST, 0, 1, 0)
+            f.STBack.STText.Text = "POSTURE/STM: " .. math.floor(currentStamina)
+            return
+        end
+    end
+    f.TargetName.Text = "TARGET: NO ACTIVE TARGET"
+    f.TargetName.TextColor3 = Color3.fromRGB(150, 160, 180)
+    f.HPBack.HPBar.Size = UDim2.new(0, 0, 1, 0)
+    f.HPBack.HPText.Text = "HP: -- / --"
+    f.STBack.STBar.Size = UDim2.new(0, 0, 1, 0)
+    f.STBack.STText.Text = "POSTURE/STM: --"
 end
 
 local function updateDropdown()
@@ -242,6 +369,9 @@ end)
 UserInputService.InputBegan:Connect(function(i, g)
     if not g and i.KeyCode == Enum.KeyCode.RightShift then
         MainFrame.Visible = not MainFrame.Visible
+        if CoreGui:FindFirstChild("XenoHUD") and CoreGui.XenoHUD:FindFirstChild("HUDFrame") then
+            CoreGui.XenoHUD.HUDFrame.Visible = MainFrame.Visible
+        end
     end
 end)
 
@@ -250,39 +380,32 @@ local function esp(ch, npc)
     local f = Instance.new("Folder")
     f.Name = "XESP"
     f.Parent = ch
+    
     local h = Instance.new("Highlight")
     h.Adornee = ch
-    h.FillTransparency = 0.65
-    h.OutlineTransparency = 0
-    h.FillColor = npc and Color3.fromRGB(255, 60, 60) or Color3.fromRGB(60, 160, 255)
-    h.OutlineColor = npc and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(0, 100, 255)
+    h.FillTransparency = 1
+    h.OutlineTransparency = 0.2
+    h.OutlineColor = npc and Color3.fromRGB(255, 65, 65) or Color3.fromRGB(65, 165, 255)
     h.Parent = f
+    
     local b = Instance.new("BillboardGui")
     b.AlwaysOnTop = true
-    b.Size = UDim2.new(0, 200, 0, 70)
-    b.MaxDistance = 500
+    b.Size = UDim2.new(0, 160, 0, 45)
+    b.MaxDistance = 350
     b.Adornee = ch:FindFirstChild("Head") or ch.HumanoidRootPart
+    
     local l = Instance.new("TextLabel")
     l.Size = UDim2.new(1, 0, 1, 0)
     l.BackgroundTransparency = 1
-    l.TextSize = 12
+    l.TextSize = 10
     l.Font = Enum.Font.RobotoMono
-    l.TextColor3 = npc and Color3.fromRGB(255, 140, 140) or Color3.fromRGB(255, 255, 255)
-    l.TextStrokeTransparency = 0
+    l.TextColor3 = npc and Color3.fromRGB(255, 140, 140) or Color3.fromRGB(220, 235, 255)
+    l.TextStrokeTransparency = 0.5
+    
     local hum = ch:FindFirstChildOfClass("Humanoid")
     local hp = hum and math.floor(hum.Health) or 0
-    local max = hum and math.floor(hum.MaxHealth) or 100
-    local st = ch:FindFirstChild("Posture") or ch:FindFirstChild("Stamina") or ch:FindFirstChild("PostureValue")
-    local stV = "100"
-    if st and (st:IsA("NumberValue") or st:IsA("IntValue")) then
-        stV = math.floor(st.Value)
-    else
-        local att = ch:GetAttribute("Posture") or ch:GetAttribute("Stamina")
-        if att then stV = math.floor(att)
-        else if hum then stV = math.floor(hum.MoveDirection.Magnitude * 100) if stV == 0 then stV = "100 (Idle)" end end end
-    end
     local prf = npc and "[NPC] " or ""
-    l.Text = prf .. ch.Name .. "\n[ HP: " .. hp .. " / " .. max .. " ]\n[ Posture/STM: " .. stV .. " ]"
+    l.Text = prf .. ch.Name .. " (" .. hp .. " HP)"
     l.Parent = b
     b.Parent = f
 end
@@ -304,9 +427,11 @@ RunService.RenderStepped:Connect(function()
 end)
 
 task.spawn(function()
+    buatHUD()
     while task.wait(0.5) do
         if not _G.XBActive then break end
         updateDropdown()
+        updateHUD()
         if Settings.ESP and LocalPlayer.Character then
             for _, v in pairs(Players:GetPlayers()) do
                 if v ~= LocalPlayer and v.Character then esp(v.Character, false) end
@@ -336,5 +461,8 @@ if LocalPlayer.Character then watch(LocalPlayer.Character) end
 B3.MouseButton1Click:Connect(function()
     _G.XBActive = false
     clear()
+    if CoreGui:FindFirstChild("XenoHUD") then CoreGui.XenoHUD:Destroy() end
     if SG then SG:Destroy() end
 end)
+
+updateDropdown()
